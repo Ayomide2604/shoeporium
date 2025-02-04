@@ -1,143 +1,68 @@
 {% load static %}
 
 <!-- Navbar -->
-<div class="site-navbar bg-white py-2">
-	<div class="search-wrap">
-		<div class="container">
-			<a href="#" class="search-close js-search-close">
-				<span class="icon-close2"></span>
-			</a>
-			<form action="#" method="post">
-				<input
-					type="text"
-					class="form-control"
-					placeholder="Search keyword and hit enter..."
-				/>
-			</form>
-		</div>
-	</div>
-
+<nav class="navbar navbar-expand-lg navbar-light bg-white py-2">
 	<div class="container">
-		<div class="d-flex align-items-center justify-content-between">
-			<!-- Logo -->
-			<div class="logo">
-				<div class="site-logo d-flex align-items-center">
-					<img
-						hx-get="{% url 'home' %}"
-						hx-push-url="true"
-						hx-target="#site-wrap"
-						src="{% static 'images/logo.png' %}"
-						alt="Shoeporium Logo"
-						class="img-fluid"
-						style="height: 80px"
-					/>
-				</div>
-			</div>
+		<!-- Logo -->
+		<a class="navbar-brand" href="{% url 'home' %}">
+			<img src="{% static 'images/logo.png' %}" alt="Shoeporium Logo" class="img-fluid" style="height: 60px" />
+		</a>
 
-			<!-- Navigation -->
-			<div class="main-nav d-none d-lg-block">
-				<nav
-					class="site-navigation text-right text-md-center"
-					role="navigation"
-				>
-					<ul class="site-menu js-clone-nav d-none d-lg-block">
-						<li class="{% if request.path == '/' %}active{% endif %}">
-							<a
-								hx-get="{% url 'home' %}"
-								hx-push-url="true"
-								hx-target="#site-wrap"
-								style="cursor: pointer"
-								>Home</a
-							>
-						</li>
-						<li class="{% if request.path == '/products/' %}active{% endif %}">
-							<a
-								hx-get="{% url 'products' %}"
-								hx-push-url="true"
-								hx-target="#site-wrap"
-								style="cursor: pointer"
-								>Shop</a
-							>
-						</li>
-						<li><a href="#">Catalogue</a></li>
-						<li><a href="#">New Arrivals</a></li>
-						<li><a href="">Contact</a></li>
-					</ul>
-				</nav>
-			</div>
+		<!-- Mobile Menu Toggle Button -->
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<!-- Navigation Links -->
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav mx-auto">
+				<li class="nav-item">
+					<a class="nav-link {% if request.path == '/' %}active{% endif %}" 
+						hx-get="{% url 'home' %}" hx-push-url="true" hx-target="#site-wrap">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link {% if request.path == '/products/' %}active{% endif %}" 
+						hx-get="{% url 'products' %}" hx-push-url="true" hx-target="#site-wrap">Shop</a>
+				</li>
+				<li class="nav-item"><a class="nav-link" href="#">Catalogue</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">New Arrivals</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+			</ul>
 
 			<!-- Icons -->
-			<div class="icons">
-				<a href="#" class="icons-btn d-inline-block js-search-open">
-					<span class="icon-search"></span>
-				</a>
-				<a href="#" class="icons-btn d-inline-block">
-					<span class="icon-heart-o"></span>
-				</a>
-				<a
-					hx-get="{% url 'view_cart' %}"
-					hx-target="#modalBody"
-					hx-headers='{"X-CSRFToken":  "{{csrf_token}}" }'
-					hx-include="#cart-count"
-					style="cursor: pointer"
-					data-bs-toggle="modal"
-					data-bs-target="#cartModal"
-					class="icons-btn d-inline-block bag"
-				>
+			<div class="d-flex align-items-center">
+				<a href="#" class="nav-link js-search-open"><span class="icon-search"></span></a>
+				<a href="#" class="nav-link"><span class="icon-heart-o"></span></a>
+
+				<!-- Cart Icon -->
+				<a class="nav-link position-relative" hx-get="{% url 'view_cart' %}" hx-target="#modalBody"
+					hx-headers='{"X-CSRFToken": "{{csrf_token}}"}' data-bs-toggle="modal" data-bs-target="#cartModal">
 					<span class="icon-shopping-bag"></span>
-					<span class="number" id="cart-count">{{cart_items}}</span>
+					<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">
+						{{ cart_items }}
+					</span>
 				</a>
+
 				{% if request.user.is_authenticated %}
-				<div class="d-inline-flex align-items-center">
-					<span class="has-children me-2">(Welcome, {{user.username}})</span>
-					<div class="dropdown">
-						<a
-							href="#"
-							class="d-inline-block bag dropdown-toggle"
-							id="userDropdown"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-						>
-						</a>
-						<ul class="dropdown-menu" aria-labelledby="userDropdown">
-							<li><a class="dropdown-item" href="">Profile</a></li>
-							<li><a class="dropdown-item" href="">My Orders</a></li>
-							<li>
-								<a
-									class="dropdown-item"
-									style="cursor: pointer"
-									hx-get="{% url 'login' %}"
-									data-bs-toggle="modal"
-									data-bs-target="#logoutModal"
-									>Logout</a
-								>
-							</li>
-						</ul>
-					</div>
+				<!-- User Dropdown -->
+				<div class="dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+						(Welcome, {{ user.username }})
+					</a>
+					<ul class="dropdown-menu" aria-labelledby="userDropdown">
+						<li><a class="dropdown-item" href="#">Profile</a></li>
+						<li><a class="dropdown-item" href="#">My Orders</a></li>
+						<li><a class="dropdown-item" hx-get="{% url 'logout' %}" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a></li>
+					</ul>
 				</div>
-
 				{% else %}
-				<a
-					hx-get="{% url 'login' %}"
-					hx-target="#site-wrap"
-					hx-push-url="true"
-					style="cursor: pointer"
-					class="icons-btn d-inline-block bag"
-				>
-					<span class="">Login</span>
-				</a>
-
+				<a class="nav-link" hx-get="{% url 'login' %}" hx-target="#site-wrap" hx-push-url="true">Login</a>
 				{% endif %}
-				<a
-					href="#"
-					class="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"
-				>
-					<span class="icon-menu"></span>
-				</a>
 			</div>
 		</div>
 	</div>
-</div>
+</nav>
 
+<!-- Modals -->
 <div id="openCartModal">{% include 'partials/cart_modal.html' %}</div>
-{% include 'accounts/logout_modal.html'%}
+{% include 'accounts/logout_modal.html' %}
