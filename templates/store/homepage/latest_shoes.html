@@ -1,0 +1,58 @@
+{% load static %}
+{% load humanize %}
+
+
+
+
+<h1 class="title-shop">SHOP</h1>
+<main class="main bd-grid">
+  {% if shoes %}
+  {% for shoe in shoes %}
+  <article class="card">
+    <div
+      hx-get="{% url 'product' shoe.id %}" 
+      hx-target="#site-wrap"
+      hx-push-url="true"
+      style="cursor:pointer"
+      class="card__img">
+        <img
+        {% if shoe.featured_image %}
+          src="{{shoe.featured_image.url}}" 
+        {% else %}
+        src= "{% static 'images/default.png' %}"        
+        {% endif %} 
+        alt="">
+    </div>
+    <div class="card__name">
+        <p>{{shoe.name}}</p>
+    </div>
+    <div class="card__precis">
+      <a href="#" class="icons-btn d-inline-block">
+        <span class="icon-heart-o"></span>
+      </a>
+        
+        <div>
+            <span class="card__preci card__preci--now">₦{{shoe.price |intcomma}}</span>
+        </div>
+        <a
+        hx-post="{% url 'add_to_cart' shoe.id %}"
+        hx-headers='{"X-CSRFToken":  "{{csrf_token}}" }'
+        hx-target = "#modalBody"
+        hx-include="#modalBody"
+        data-bs-toggle="modal"
+        data-bs-target="#cartModal"
+        style="cursor: pointer;"
+        class="icons-btn d-inline-block bag"
+      >
+        <span class="icon-shopping-bag"></span>
+        
+      </a>
+    </div>
+  </article>
+  {% endfor %}
+  {% else %}
+  No Products Available
+  {% endif %}
+  </main>
+  
+

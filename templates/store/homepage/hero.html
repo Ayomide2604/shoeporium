@@ -1,0 +1,22 @@
+{% load static %}
+<div class="site-blocks-cover" data-aos="fade">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 ml-auto order-md-2 align-self-start">
+          <div class="site-block-cover-content">
+          <h2 class="sub-title">#New Summer Collection 2019</h2>
+          <h1>Arrivals Sales</h1>
+          <p><a 
+              class="btn btn-black rounded-0"
+              hx-get="{% url 'products' %}"
+              hx-push-url="true"
+              hx-target="#site-wrap"
+              >Shop Now</a></p>
+          </div>
+        </div>
+        <div class="col-md-6 order-1 align-self-end">
+          <img src="{% static 'images/hero5.webp' %}" alt="Image" class="img-fluid">
+        </div>
+      </div>
+    </div>
+</div>

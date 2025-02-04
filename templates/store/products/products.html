@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+<div class="site-section">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-md-9 order-1">
+        <div class="row align">
+          <div class="col-md-12 mb-5">
+            <div class="float-md-left">
+              <h2 class="text-black h5">Shop All</h2>
+            </div>
+            <div class="d-flex">
+              <div class="dropdown mr-1 ml-md-auto">
+                <button type="button" class="btn btn-white btn-sm dropdown-toggle px-4" data-toggle="dropdown">
+                  Brands
+              </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+                  <a class="dropdown-item" href="{% url 'products' %}">All</a>
+                  {% for brand in brands %}
+                    <a 
+                      class="dropdown-item" 
+                      hx-get="?{{ request.GET.urlencode }}&brand={{ brand.id }}"
+                      hx-target="#site-wrap"
+                      
+                      >{{ brand.name }}</a>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="btn-group">
+                <button
+                  type="button"
+                  class="btn btn-white btn-sm dropdown-toggle px-4"
+                  id="dropdownMenuReference"
+                  data-toggle="dropdown"
+                >
+                  Reference
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                  <span class="dropdown-item">Filter By Name</span>
+                  <a 
+                    class="dropdown-item" 
+                    hx-get="?sort_by=name_asc&page={{ request.GET.page|default:1 }}"
+                    hx-target="#site-wrap"
+                    hx-push-url="true"
+                    >A to Z</a>
+                  <a 
+                    class="dropdown-item" 
+                    hx-get="?sort_by=price_desc&page={{ request.GET.page|default:1 }}"
+                    hx-target="#site-wrap"
+                    hx-push-url="true"
+                    
+                    >Z to A</a>
+                  <div class="dropdown-divider"></div>
+                  <span class="dropdown-item">Filter by Price</span>
+                  <a 
+                    class="dropdown-item" 
+                    hx-get="?sort_by=price_asc&page={{ request.GET.page|default:1 }}"
+                    hx-target="#site-wrap"
+                    hx-push-url="true"
+                    >Low to High</a>
+                  <a 
+                    class="dropdown-item" 
+                    hx-get="?sort_by=price_desc&page={{ request.GET.page|default:1 }}"
+                    hx-target="#site-wrap"
+                    hx-push-url="true"
+                    >High to Low</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <main class="main bd-grid">
+          {% if shoes %}
+            {% for shoe in shoes %}
+              <article class="card">
+                <div
+                  hx-get="{% url 'product' shoe.id %}" 
+                  hx-target="#site-wrap"
+                  class="card__img">
+                  <img
+                    {% if shoe.featured_image %}
+                      src="{{shoe.featured_image.url}}" 
+                    {% else %}
+                      src="{% static 'images/default.png' %}"        
+                    {% endif %}
+                    alt="">
+                </div>
+                <div class="card__name">
+                  <p>{{shoe.name}}</p>
+                </div>
+                <div class="card__precis">
+                  <a href="#" class="icons-btn d-inline-block">
+                    <span class="icon-heart-o"></span>
+                  </a>
+                  <div>
+                    <span class="card__preci card__preci--now">₦{{shoe.price |intcomma}}</span>
+                  </div>
+                  <a
+                    hx-post="{% url 'add_to_cart' shoe.id %}"
+                    hx-headers='{"X-CSRFToken":  "{{csrf_token}}" }'
+                    hx-target="#modalBody"
+                    hx-include="#modalBody, #cart-count"
+                    data-bs-toggle="modal"
+                    data-bs-target="#cartModal"
+                    class="icons-btn d-inline-block bag"
+                  >
+                    <span class="icon-shopping-bag"></span>
+                  </a>
+                </div>
+              </article>
+            {% endfor %}
+          {% else %}
+            No Products Available
+          {% endif %}
+        </main>
+
+        <div class="row mb-5"></div>
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <div class="site-block-27">
+              <ul>
+                {% if shoes.has_previous %}
+                  <li>
+                    <a 
+                      hx-get="?{{ request.GET.urlencode }}&page={{ shoes.previous_page_number }}"
+                      hx-target="#site-wrap"
+                      hx-push-url="true"
+                      style="cursor: pointer;"
+                    >&lt;</a>
+                  </li>
+                {% endif %}
+
+                {% for num in shoes.paginator.page_range %}
+                  {% if shoes.number == num %}
+                    <li class="active"><span>{{ num }}</span></li>
+                  {% else %}
+                    <li>
+                      <a 
+                        hx-get="?{{ request.GET.urlencode }}&page={{ num }}"
+                        hx-target="#site-wrap"
+                        hx-push-url="true"
+                        style="cursor: pointer;"
+                      >{{ num }}</a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+
+                {% if shoes.has_next %}
+                  <li>
+                    <a 
+                      hx-get="?{{ request.GET.urlencode }}&page={{ shoes.next_page_number }}"
+                      hx-target="#site-wrap"
+                      hx-push-url="true"
+                      style="cursor: pointer;"
+                    >&gt;</a>
+                  </li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 order-2 mb-5 mb-md-0">
+        <div class="border p-4 rounded mb-4">
+          <h3 class="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-1">
+              <a href="?{{ request.GET.urlencode }}&category=all" class="d-flex">
+                <span>All</span>
+              </a>
+            </li>
+            {% for brand in brands %}
+              <li class="mb-1">
+                <a href="?{{ request.GET.urlencode }}&category={{ brand.id }}" class="d-flex">
+                  <span>{{brand.name}}</span>
+                  <span class="text-black ml-auto">({{brand.product_count}})</span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="border p-4 rounded mb-4">
+          <div class="mb-4">
+            <h3 class="mb-3 h6 text-uppercase text-black d-block">Filter by Price</h3>
+            <div id="slider-range" class="border-primary"></div>
+            <input
+              type="text"
+              name="text"
+              id="amount"
+              class="form-control border-0 pl-0 bg-white"
+              disabled=""
+            />
+          </div>
+
+          <div class="mb-4">
+            <h3 class="mb-3 h6 text-uppercase text-black d-block">Size</h3>
+            <label for="s_sm" class="d-flex">
+              <input type="checkbox" id="s_sm" class="mr-2 mt-1" />
+              <span class="text-black">Small (2,319)</span>
+            </label>
+            <label for="s_md" class="d-flex">
+              <input type="checkbox" id="s_md" class="mr-2 mt-1" />
+              <span class="text-black">Medium (1,282)</span>
+            </label>
+            <label for="s_lg" class="d-flex">
+              <input type="checkbox" id="s_lg" class="mr-2 mt-1" />
+              <span class="text-black">Large (1,392)</span>
+            </label>
+          </div>
+
+          <div class="mb-4">
+            <h3 class="mb-3 h6 text-uppercase text-black d-block">Color</h3>
+            <a href="#" class="d-flex color-item align-items-center">
+              <span class="bg-danger color d-inline-block rounded-circle mr-2"></span>
+              <span class="text-black">Red (2,429)</span>
+            </a>
+            <a href="#" class="d-flex color-item align-items-center">
+              <span class="bg-success color d-inline-block rounded-circle mr-2"></span>
+              <span class="text-black">Green (2,298)</span>
+            </a>
+            <a href="#" class="d-flex color-item align-items-center">
+              <span class="bg-info color d-inline-block rounded-circle mr-2"></span>
+              <span class="text-black">Blue (1,075)</span>
+            </a>
+            <a href="#" class="d-flex color-item align-items-center">
+              <span class="bg-primary color d-inline-block rounded-circle mr-2"></span>
+              <span class="text-black">Purple (1,075)</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

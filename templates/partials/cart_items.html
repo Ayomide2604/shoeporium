@@ -1,0 +1,70 @@
+{% load humanize %} 
+{% if cart.items %}
+<div class="table-responsive">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Product</th>
+				<th>Price</th>
+				<th>Quantity</th>
+				<th>Total</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in cart.items.all %}
+			<tr id="">
+				<td>
+					<img
+						src="{{ item.product.featured_image.url }}"
+						alt="{{ item.product.name }}"
+						width="50"
+					/>
+					{{ item.product.name }}
+				</td>
+				<td>₦{{ item.product.price | intcomma }}</td>
+				<td>{{ item.quantity }}</td>
+				<td>₦{{ item.subtotal | intcomma }}</td>
+				<td>
+					<!-- Increase Quantity Button -->
+					<button
+						class="btn btn-primary btn-sm"
+						hx-post="{% url 'update_cart_item' item.id 'increase' %}"
+						hx-headers='{"X-CSRFToken":  "{{csrf_token}}" }'
+						hx-target="#modalBody"
+					>
+						+
+					</button>
+
+					<!-- Decrease Quantity Button -->
+					<button
+						class="btn btn-primary btn-sm"
+						hx-post="{% url 'update_cart_item' cart_item_id=item.id action='decrease' %}"
+						hx-headers='{"X-CSRFToken":  "{{csrf_token}}" }'
+						hx-target="#modalBody"
+					>
+						-
+					</button>
+				</td>
+
+				<td>
+					<button
+						class="btn btn-danger btn-sm"
+						hx-post="{% url 'remove_from_cart' item.id %}"
+						hx-headers='{"X-CSRFToken":  "{{csrf_token}}" }'
+						hx-target="#modalBody"
+					>
+						Remove
+					</button>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+<div class="text-end">
+	<h5>Total:₦{{cart.total_cart | intcomma}}</h5>
+</div>
+{% else %}
+<p class="text-center">Your cart is empty.</p>
+{% endif %}

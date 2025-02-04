@@ -1,0 +1,41 @@
+<div
+	class="modal fade"
+	id="logoutModal"
+	tabindex="-1"
+	aria-labelledby="logoutModalLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h5 class="modal-title" id="logoutModalLabel">
+					Are you sure you want to log out?
+				</h5>
+				<button
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+					aria-label="Close"
+				></button>
+			</div>
+			<!-- Modal Body -->
+			<div class="modal-body">
+				<p>You're about to log out of your account. Do you want to continue?</p>
+			</div>
+			<!-- Modal Footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+					Cancel
+				</button>
+				<a
+					hx-post="{% url 'logout' %}"
+					hx-headers='{"X-CSRFToken":  "{{csrf_token}}" }'
+					hx-trigger="click"
+					class="btn btn-danger"
+					>Logout</a
+				>
+			</div>
+		</div>
+	</div>
+</div>
