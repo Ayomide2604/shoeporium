@@ -1,6 +1,8 @@
 from django.db import models
 import uuid
 from django.contrib.auth import get_user_model
+from cloudinary.models import CloudinaryField
+
 # Create your models here.
 
 User = get_user_model()
@@ -24,8 +26,9 @@ class Shoe(models.Model):
         Brand, on_delete=models.SET_NULL, related_name='shoes', null=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     description = models.TextField(null=True, blank=True)
-    featured_image = models.ImageField(
-        upload_to='shoes', null=True, blank=True)
+    featured_image = CloudinaryField(
+        'image', null=True, blank=True, default="https://res.cloudinary.com/dfhvvgzf2/image/upload/v1738714394/default_y0spv5.png")
+
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -4,6 +4,10 @@ from dotenv import load_dotenv
 import dj_database_url
 from pathlib import Path
 from django.contrib.messages import constants as message_constants
+import cloudinary
+import cloudinary.uploader
+import cloudinary
+from decouple import config
 
 
 load_dotenv()
@@ -156,3 +160,16 @@ MESSAGE_TAGS = {
     message_constants.WARNING: 'warning',
     message_constants.ERROR: 'danger',
 }
+
+
+# Cloudinary settings using environment variables
+cloudinary.config(
+    cloud_name=config('CLOUDINARY_CLOUD_NAME'),
+    api_key=config('CLOUDINARY_API_KEY'),
+    api_secret=config('CLOUDINARY_API_SECRET')
+)
+# Default file storage for media files
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Optional: Define URL for media files in production (if using Cloudinary)
+MEDIA_URL = "https://res.cloudinary.com/dfhvvgzf2/image/upload/"
