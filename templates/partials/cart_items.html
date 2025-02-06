@@ -1,8 +1,8 @@
 {% load humanize %}
 {% if cart.items.exists %}
 <div class="table-responsive">
-  <table class="table table-striped">
-    <thead>
+  <table class="table table-striped align-middle">
+    <thead class="text-center">
       <tr>
         <th>Product</th>
         <th>Price</th>
@@ -13,8 +13,8 @@
     </thead>
     <tbody>
       {% for item in cart.items.all %}
-      <tr id="cart-item-{{ item.id }}">
-        <td>
+      <tr id="cart-item-{{ item.id }}" class="text-center">
+        <td class="d-flex align-items-center">
           <img src="{{ item.product.featured_image.url }}" alt="{{ item.product.name }}"
                class="img-fluid rounded" style="max-width: 50px;" />
           <span class="ms-2">{{ item.product.name }}</span>
@@ -23,7 +23,7 @@
         <td>{{ item.quantity }}</td>
         <td>₦{{ item.subtotal | intcomma }}</td>
         <td>
-          <div class="d-flex flex-wrap gap-1">
+          <div class="d-flex flex-column flex-md-row justify-content-center gap-1">
             <button class="btn btn-primary btn-sm"
                     hx-post="{% url 'update_cart_item' item.id 'increase' %}"
                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
@@ -31,7 +31,7 @@
               +
             </button>
             <button class="btn btn-primary btn-sm"
-                    hx-post="{% url 'update_cart_item' cart_item_id=item.id action='decrease' %}"
+                    hx-post="{% url 'update_cart_item' item.id 'decrease' %}"
                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                     hx-target="#modalBody">
               -
