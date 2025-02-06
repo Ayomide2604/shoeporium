@@ -9,9 +9,9 @@ from django.views.decorators.cache import cache_page
 
 # Create your views here.
 
-
+@cache_page(900)
 def homepage(request):
-    shoes = Shoe.objects.all()[:8]
+    shoes = Shoe.objects.only("id", "name", "price", "featured_image")[:8]
     context = {'shoes': shoes}
 
     return render(request, 'store/homepage/index.html', context)
@@ -23,7 +23,8 @@ def contact_page(request):
 
 @cache_page(900)
 def product_list(request):
-    shoes = Shoe.objects.all().select_related('brand')
+    shoes = Shoe.objects.only(
+        "id", "name", "price", "featured_image", "brand_id").select_related('brand')
 
     # Get filter and sorting parameters
     brand_id = request.GET.get('brand')

@@ -12,6 +12,7 @@ class ShoeAdmin(admin.ModelAdmin):
     list_display = ('name', 'brand', 'price',)
     list_editable = ('price', )
     list_per_page = 20
+    list_select_related = ('brand', )
     search_fields = ('name', 'brand__name')
 
 
