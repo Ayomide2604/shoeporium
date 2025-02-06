@@ -39,10 +39,10 @@
             Sort By
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" hx-get="?sort_by=name_asc&page={{ request.GET.page|default:1 }}" hx-target="#site-wrap">A to Z</a></li>
-            <li><a class="dropdown-item" hx-get="?sort_by=name_desc&page={{ request.GET.page|default:1 }}" hx-target="#site-wrap">Z to A</a></li>
-            <li><a class="dropdown-item" hx-get="?sort_by=price_desc&page={{ request.GET.page|default:1 }}" hx-target="#site-wrap">Price: High to Low</a></li>
-            <li><a class="dropdown-item" hx-get="?sort_by=price_asc&page={{ request.GET.page|default:1 }}" hx-target="#site-wrap">Price: Low to High</a></li>
+            <li><a class="dropdown-item" hx-get="?sort_by=name_asc&page={{ request.GET.page|default:1 }}" hx-target="#site-wrap" hx-push-url="true">A to Z</a></li>
+            <li><a class="dropdown-item" hx-get="?sort_by=name_desc&page={{ request.GET.page|default:1 }}" hx-target="#site-wrap" hx-push-url="true">Z to A</a></li>
+            <li><a class="dropdown-item" hx-get="?sort_by=price_desc&page={{ request.GET.page|default:1 }}" hx-target="#site-wrap"hx-push-url="true">Price: High to Low</a></li>
+            <li><a class="dropdown-item" hx-get="?sort_by=price_asc&page={{ request.GET.page|default:1 }}" hx-target="#site-wrap"hx-push-url="true">Price: Low to High</a></li>
           </ul>
         </div>
       </div>

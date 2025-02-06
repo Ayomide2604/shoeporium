@@ -38,7 +38,8 @@ class Shoe(models.Model):
 class ShoeImage(models.Model):
     shoe = models.ForeignKey(
         Shoe, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='shoes')
+    image = CloudinaryField(
+        'image', null=True, blank=True, default="https://res.cloudinary.com/dfhvvgzf2/image/upload/v1738714394/default_y0spv5.png")
 
     def __str__(self):
         return f'image of {self.shoe.name}'

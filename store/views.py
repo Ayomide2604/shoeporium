@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.views.decorators.cache import cache_page
 
 
 # Create your views here.
@@ -16,8 +17,13 @@ def homepage(request):
     return render(request, 'store/homepage/index.html', context)
 
 
+def contact_page(request):
+    return render(request, 'store/contact/contact.html')
+
+
+@cache_page(900)
 def product_list(request):
-    shoes = Shoe.objects.all()
+    shoes = Shoe.objects.all().select_related('brand')
 
     # Get filter and sorting parameters
     brand_id = request.GET.get('brand')

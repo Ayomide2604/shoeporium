@@ -9,7 +9,8 @@ class BrandAdmin(admin.ModelAdmin):
 
 @admin.register(Shoe)
 class ShoeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'brand', 'price')
+    list_display = ('name', 'brand', 'price',)
+    list_editable = ('price', )
     list_per_page = 20
     search_fields = ('name', 'brand__name')
 
