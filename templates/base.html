@@ -52,13 +52,16 @@
 	</head>
 	<body>
 		<div class="site-wrap" id="site-wrap">
-			{% include 'partials/navbar.html' %} {% include 'partials/alert.html' %}
+			{% include 'partials/navbar.html' %} 
+			{% include 'partials/alert.html' %}
 
 			<!-- Main Content -->
-			<div class="container">{% block content %} {% endblock %}</div>
+			<div class="container">
+				{% block content %} {% endblock %}
+			</div>
 
-			{% include 'partials/footer.html' %}
 		</div>
+		{% include 'partials/footer.html' %}
 
 		<!-- JavaScript -->
 		<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
