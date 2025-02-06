@@ -9,7 +9,6 @@ from django.views.decorators.cache import cache_page
 
 # Create your views here.
 
-@cache_page(900)
 def homepage(request):
     shoes = Shoe.objects.only("id", "name", "price", "featured_image")[:8]
     context = {'shoes': shoes}
