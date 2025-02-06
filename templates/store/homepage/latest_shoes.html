@@ -14,22 +14,19 @@
 					class="card-img-top img-fluid"
 					style="cursor: pointer"
 				>
+				{% if shoe.featured_image %}
 					<img
-						{%
-						if
-						shoe.featured_image
-						%}
-						src="{{ shoe.featured_image.url }}"
-						{%
-						else
-						%}
-						src="{% static 'images/default.png' %}"
-						{%
-						endif
-						%}
-						class="w-100"
-						alt="{{ shoe.name }}"
+					class="card-img-top img-fluid"
+					src="{{ shoe.featured_image.url }}"
+					alt="{{ shoe.name }}"
 					/>
+				{% else %}
+					<img
+					class="card-img-top img-fluid"
+					src="{{ shoe.featured_image.url }}"
+					alt="{{ shoe.name }}"
+					/>
+				{% endif %}
 				</div>
 				<div class="card-body text-center">
 					<h6 class="card-title">{{ shoe.name }}</h6>

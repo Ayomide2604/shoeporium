@@ -1,0 +1,35 @@
+<!-- Pagination -->
+<nav class="mt-4">
+	<ul class="pagination justify-content-center">
+		{% if shoes.has_previous %}
+		<li class="page-item">
+			<a
+				class="page-link"
+				hx-get="?page={{ shoes.previous_page_number }}&brand={{ selected_brand }}&sort_by={{ sort_by }}"
+				hx-target="#site-wrap"
+				>&laquo;</a
+			>
+		</li>
+		{% endif %} {% for num in shoes.paginator.page_range %}
+		<li class="page-item {% if shoes.number == num %}active{% endif %}">
+			<a
+				class="page-link"
+				hx-get="?page={{ num }}&brand={{ selected_brand }}&sort_by={{ sort_by }}"
+				hx-target="#site-wrap"
+				hx-push-url="true"
+				>{{ num }}</a
+			>
+		</li>
+		{% endfor %} {% if shoes.has_next %}
+		<li class="page-item">
+			<a
+				class="page-link"
+				hx-get="?page={{ shoes.next_page_number }}&brand={{ selected_brand }}&sort_by={{ sort_by }}"
+				hx-target="#site-wrap"
+				hx-push-url="true"
+				>&raquo;</a
+			>
+		</li>
+		{% endif %}
+	</ul>
+</nav>

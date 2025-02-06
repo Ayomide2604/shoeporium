@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Shoe, Cart, CartItem
+from .models import Brand, Shoe, Cart, CartItem
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
@@ -20,7 +20,9 @@ def contact_page(request):
     return render(request, 'store/contact/contact.html')
 
 
-@cache_page(900)
+# @cache_page(900)
+
+
 def product_list(request):
     shoes = Shoe.objects.only(
         "id", "name", "price", "featured_image", "brand_id").select_related('brand')
@@ -30,7 +32,7 @@ def product_list(request):
     sort_by = request.GET.get('sort_by')
 
     # Filter by brand if selected
-    if brand_id:
+    if brand_id and brand_id != 'all':
         shoes = shoes.filter(brand_id=brand_id)
 
     # Sorting options
@@ -51,8 +53,10 @@ def product_list(request):
     context = {
         'shoes': page_obj,
         'selected_brand': brand_id,
-        'sort_by': sort_by
+        'sort_by': sort_by,
+        'brands': Brand.objects.all(),
     }
+
     return render(request, 'store/products/products.html', context)
 
 

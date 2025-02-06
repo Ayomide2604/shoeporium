@@ -10,15 +10,27 @@
       <button class="btn btn-primary btn-block d-lg-none mb-3" data-bs-toggle="collapse" data-bs-target="#filters">
         Categories
       </button>
-
+    
       <div id="filters" class="collapse d-lg-block">
         <div class="border p-3 rounded mb-4">
           <h5 class="text-uppercase">Categories</h5>
-          <ul class="list-unstyled">
-            <li><a href="?{{ request.GET.urlencode }}&category=all">All</a></li>
+          <ul class="list-group">
+            <li class="list-group-item {% if not selected_brand or selected_brand == 'all' %}active{% endif %}">
+              <a class="text-decoration-none {% if not selected_brand or selected_brand == 'all' %}text-white{% else %}text-dark{% endif %}" 
+                 hx-get="?brand=all&sort_by={{ sort_by }}" 
+                 hx-target="#site-wrap" 
+                 hx-push-url="true" 
+                 style="cursor: pointer;">
+                All
+              </a>
+            </li>
             {% for brand in brands %}
-              <li>
-                <a href="?{{ request.GET.urlencode }}&category={{ brand.id }}">
+              <li class="list-group-item {% if selected_brand == brand.id|stringformat:'s' %}active{% endif %}">
+                <a class="text-decoration-none {% if selected_brand == brand.id|stringformat:'s' %}text-white{% else %}text-dark{% endif %}" 
+                   hx-get="?brand={{ brand.id }}&sort_by={{ sort_by }}" 
+                   hx-target="#site-wrap" 
+                   hx-push-url="true" 
+                   style="cursor: pointer;">
                   {{ brand.name }} <span class="text-muted">({{ brand.product_count }})</span>
                 </a>
               </li>
@@ -26,81 +38,36 @@
           </ul>
         </div>
       </div>
+      
     </aside>
 
     <!-- Main Product Grid -->
     <section class="col-lg-9">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="h5">Shop All</h2>
-
         <!-- Sort Dropdown -->
         <div class="dropdown">
           <button class="btn btn-sm btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown">
             Sort By
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" hx-get="?sort_by=name_asc&page={{ request.GET.page|default:1 }}" hx-target="#site-wrap" hx-push-url="true">A to Z</a></li>
-            <li><a class="dropdown-item" hx-get="?sort_by=name_desc&page={{ request.GET.page|default:1 }}" hx-target="#site-wrap" hx-push-url="true">Z to A</a></li>
-            <li><a class="dropdown-item" hx-get="?sort_by=price_desc&page={{ request.GET.page|default:1 }}" hx-target="#site-wrap"hx-push-url="true">Price: High to Low</a></li>
-            <li><a class="dropdown-item" hx-get="?sort_by=price_asc&page={{ request.GET.page|default:1 }}" hx-target="#site-wrap"hx-push-url="true">Price: Low to High</a></li>
+            <li><a class="dropdown-item {% if request.GET.sort_by == 'name_asc' %}active{% endif %}" hx-get="?sort_by=name_asc&brand={{ selected_brand|default:'all' }}&page={{ shoes.number }}" hx-target="#site-wrap" hx-push-url="true" style="cursor: pointer;">A to Z</a></li>
+            <li><a class="dropdown-item {% if request.GET.sort_by == 'name_desc' %}active{% endif %} " hx-get="?sort_by=name_desc&brand={{ selected_brand|default:'all' }}&page={{ shoes.number }}" hx-target="#site-wrap" hx-push-url="true"  style="cursor: pointer;">Z to A</a></li>
+            <li><a class="dropdown-item {% if request.GET.sort_by == 'price_desc' %}active{% endif %}" hx-get="?sort_by=price_desc&brand={{ selected_brand|default:'all' }}&page={{ shoes.number }}" hx-target="#site-wrap"hx-push-url="true" style="cursor: pointer;">Price: High to Low</a></li>
+            <li><a class="dropdown-item {% if request.GET.sort_by == 'price_asc' %}active{% endif %} " hx-get="?sort_by=price_asc&brand={{ selected_brand|default:'all' }}&page={{ shoes.number }}" hx-target="#site-wrap"hx-push-url="true" style="cursor: pointer;">Price: Low to High</a></li>
           </ul>
         </div>
       </div>
 
-      <div class="row">
-        {% if shoes %}
-          {% for shoe in shoes %}
-            <div class="col-md-4 col-sm-6 mb-4">
-              <div class="card shadow-sm">
-                <div hx-get="{% url 'product' shoe.id %}" hx-target="#site-wrap" hx-push-url="true">
-                  <img class="card-img-top img-fluid"
-                    src="{{ shoe.featured_image.url }}"
-                    alt="{{ shoe.name }}">
-                </div>
-                <div class="card-body text-center">
-                  <h6 class="card-title">{{ shoe.name }}</h6>
-                  <p class="text-muted">₦{{ shoe.price | intcomma }}</p>
-                  <button 
-                    hx-post="{% url 'add_to_cart' shoe.id %}"
-                    hx-headers='{"X-CSRFToken":  "{{csrf_token}}" }'
-                    hx-target = "#modalBody"
-                    hx-include="#modalBody"
-                    data-bs-toggle="modal"
-                    data-bs-target="#cartModal"
-                    class="btn btn-sm btn-primary">
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        {% else %}
-          <p class="text-center w-100">No Products Available</p>
-        {% endif %}
-      </div>
+      <!-- Include Product List Template -->
+     {% include 'store/products/product_list.html' %}
+    
+     <!-- include Pagination -->
+    <div id="product_pagination">
+      {% include 'store/products/pagination.html' %}
+    </div>
 
-      <!-- Pagination -->
-      <nav class="mt-4">
-        <ul class="pagination justify-content-center">
-          {% if shoes.has_previous %}
-            <li class="page-item">
-              <a class="page-link" hx-get="?{{ request.GET.urlencode }}&page={{ shoes.previous_page_number }}" hx-target="#site-wrap">&laquo;</a>
-            </li>
-          {% endif %}
 
-          {% for num in shoes.paginator.page_range %}
-            <li class="page-item {% if shoes.number == num %}active{% endif %}">
-              <a class="page-link" hx-get="?{{ request.GET.urlencode }}&page={{ num }}" hx-target="#site-wrap">{{ num }}</a>
-            </li>
-          {% endfor %}
-
-          {% if shoes.has_next %}
-            <li class="page-item">
-              <a class="page-link" hx-get="?{{ request.GET.urlencode }}&page={{ shoes.next_page_number }}" hx-target="#site-wrap">&raquo;</a>
-            </li>
-          {% endif %}
-        </ul>
-      </nav>
     </section>
   </div>
 </div>
