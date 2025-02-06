@@ -1,0 +1,71 @@
+{% load static %}
+{% load humanize %}
+<button class="btn btn-secondary btn-sm mb-3 hover-effect"
+
+    hx-get="{{ request.META.HTTP_REFERER|default:'/default-url' }}"
+    hx-target="#site-wrap"
+    hx-push-url="true">
+    <h5 class="display-7 text-dark">Go Back</h5>
+</button>
+
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        {% if shoe %}
+<article class="card bg-light shadow-sm">
+
+            <div hx-get="{% url 'product' shoe.id %}" hx-target="#site-wrap" class="card__img">
+                <img class="img-fluid"
+                    {% if shoe.featured_image %}
+                        src="{{ shoe.featured_image.url }}" 
+                    {% else %}
+                        src="{% static 'images/default.png' %}"        
+                    {% endif %} 
+                    alt="{{ shoe.name }}">
+            </div>
+        </article>
+    </div>
+
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        <h2 class="text-black mb-3">{{ shoe.name | title }}</h2>
+
+        <p class="mb-4 text-muted">{{ shoe.description }}</p>
+
+        <p><strong class="text-primary h4">₦{{ shoe.price | intcomma }}</strong></p>
+        <div class="mb-4">
+            <small class="text-muted">Price includes VAT</small>
+        </div>
+
+
+        <div class="mb-4">
+            <div class="input-group" style="max-width: 120px;">
+                <div class="input-group-prepend">
+                    <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                </div>
+                <input type="text" class="form-control text-center" value="1">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-md-row">
+            <a hx-post="{% url 'add_to_cart' shoe.id %}" class="btn btn-primary btn-sm height-auto px-4 py-3 mb-2 mb-md-0 me-md-2 hover-effect"
+
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}" }'
+                hx-target="#modalBody"
+                data-bs-toggle="modal"
+                data-bs-target="#cartModal"
+                class="btn btn-primary btn-sm height-auto px-4 py-3 mb-2 mb-md-0 me-md-2">
+                <span class="icon-shopping-bag"></span>
+            </a>
+
+            <a href="#" class="btn btn-outline-danger btn-sm height-auto px-4 py-3 hover-effect">
+
+                <span class="icon-heart-o"></span> 
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <p class="text-center text-danger">No Products Available</p>
+    {% endif %}
+</div>

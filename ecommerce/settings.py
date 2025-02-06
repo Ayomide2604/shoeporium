@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = True
 
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
@@ -174,12 +174,3 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Optional: Define URL for media files in production (if using Cloudinary)
 MEDIA_URL = "https://res.cloudinary.com/dfhvvgzf2/image/upload/"
-
-
-if not DEBUG:
-    INSTALLED_APPS += ['debug_toolbar']
-    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
-
-    INTERNAL_IPS = [
-        '127.0.0.1',
-    ]
