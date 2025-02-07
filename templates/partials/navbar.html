@@ -5,11 +5,21 @@
 	<div class="container">
 		<!-- Logo -->
 		<a class="navbar-brand" href="{% url 'home' %}">
-			<img src="{% static 'images/logo.png' %}" alt="Shoeporium Logo" class="img-fluid" style="height: 60px" />
+			<img
+				src="{% static 'images/logo.png' %}"
+				alt="Shoeporium Logo"
+				class="img-fluid"
+				style="height: 60px"
+			/>
 		</a>
 
 		<!-- Mobile Menu Toggle Button -->
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+		<button
+			class="navbar-toggler"
+			type="button"
+			data-bs-toggle="collapse"
+			data-bs-target="#navbarNav"
+		>
 			<span class="navbar-toggler-icon"></span>
 		</button>
 
@@ -17,46 +27,98 @@
 		<div class="collapse navbar-collapse" id="navbarNav">
 			<ul class="navbar-nav mx-auto">
 				<li class="nav-item">
-					<a class="nav-link {% if request.path == '/' %}active{% endif %}" 
-						hx-get="{% url 'home' %}" hx-push-url="true" hx-target="#site-wrap" style="cursor: pointer;">Home</a>
+					<a
+						class="nav-link {% if request.path == '/' %}active{% endif %}"
+						hx-get="{% url 'home' %}"
+						hx-push-url="true"
+						hx-target="#site-wrap"
+						style="cursor: pointer"
+						>Home</a
+					>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link {% if request.path == '/products/' %}active{% endif %}" 
-						hx-get="{% url 'products' %}" hx-push-url="true" hx-target="#site-wrap" style="cursor: pointer;">Shop</a>
+					<a
+						class="nav-link {% if request.path == '/products/' %}active{% endif %}"
+						hx-get="{% url 'products' %}"
+						hx-push-url="true"
+						hx-target="#site-wrap"
+						style="cursor: pointer"
+						>Shop</a
+					>
 				</li>
 				<li class="nav-item"><a class="nav-link" href="#">Catalogue</a></li>
 				<li class="nav-item"><a class="nav-link" href="#">New Arrivals</a></li>
-				<li class="nav-item"><a class="nav-link" hx-get="{% url 'contact' %}" hx-target="#site-wrap" style="cursor: pointer;">Contact</a></li>
+				<li class="nav-item">
+					<a
+						class="nav-link"
+						hx-get="{% url 'contact' %}"
+						hx-target="#site-wrap"
+						style="cursor: pointer"
+						>Contact</a
+					>
+				</li>
 			</ul>
 
 			<!-- Icons -->
 			<div class="d-flex align-items-center">
-				<a href="#" class="nav-link js-search-open"><span class="icon-search"></span></a>
+				<a href="#" class="nav-link js-search-open"
+					><span class="icon-search"></span
+				></a>
 				<a href="#" class="nav-link"><span class="icon-heart-o"></span></a>
 
 				<!-- Cart Icon -->
-				<a class="nav-link position-relative" hx-get="{% url 'view_cart' %}" hx-target="#modalBody"
-					hx-headers='{"X-CSRFToken": "{{csrf_token}}"}' data-bs-toggle="modal" data-bs-target="#cartModal">
-					<span class="icon-shopping-bag"></span>
-					<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">
-						{{ cart_items }}
+				<a class="nav-link position-relative">
+					<span
+						class="icon-shopping-bag"
+						hx-get="{% url 'view_cart' %}"
+						hx-target="#modalBody"
+						hx-headers='{"X-CSRFToken": "{{csrf_token}}"}'
+						data-bs-toggle="modal"
+						data-bs-target="#cartModal"
+					></span>
+					<span
+						class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+						id="cart-count"
+						hx-get="{% url 'cart_count' %}"
+						hx-trigger="every 1s"
+					>
 					</span>
 				</a>
 
 				{% if request.user.is_authenticated %}
 				<!-- User Dropdown -->
 				<div class="dropdown">
-					<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+					<a
+						class="nav-link dropdown-toggle"
+						href="#"
+						id="userDropdown"
+						role="button"
+						data-bs-toggle="dropdown"
+					>
 						(Welcome, {{ user.username }})
 					</a>
 					<ul class="dropdown-menu" aria-labelledby="userDropdown">
 						<li><a class="dropdown-item" href="#">Profile</a></li>
 						<li><a class="dropdown-item" href="#">My Orders</a></li>
-						<li><a class="dropdown-item" hx-get="{% url 'logout' %}" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a></li>
+						<li>
+							<a
+								class="dropdown-item"
+								hx-get="{% url 'logout' %}"
+								data-bs-toggle="modal"
+								data-bs-target="#logoutModal"
+								>Logout</a
+							>
+						</li>
 					</ul>
 				</div>
 				{% else %}
-				<a class="nav-link" hx-get="{% url 'login' %}" hx-target="#site-wrap" hx-push-url="true">Login</a>
+				<a
+					class="nav-link"
+					hx-get="{% url 'login' %}"
+					hx-target="#site-wrap"
+					hx-push-url="true"
+					>Login</a
+				>
 				{% endif %}
 			</div>
 		</div>

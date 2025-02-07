@@ -3,7 +3,7 @@ from .models import Brand, Shoe, Cart, CartItem
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.cache import cache_page
 
 
@@ -64,6 +64,19 @@ def product_detail(request, pk):
     shoe = get_object_or_404(Shoe, id=pk)
     context = {'shoe': shoe}
     return render(request, 'store/product/product.html', context)
+
+
+def cart_count(request):
+    if request.user.is_authenticated:
+        try:
+            cart = Cart.objects.get(user=request.user)
+            total_items = cart.total_items()
+        except Cart.DoesNotExist:
+            total_items = 0
+    else:
+        total_items = 0
+
+    return HttpResponse( total_items)
 
 
 def add_to_cart(request, product_id):
