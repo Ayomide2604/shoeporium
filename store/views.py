@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Brand, Shoe, Cart, CartItem
+
+from store.utils import create_order
+from .models import Brand, Order, Shoe, Cart, CartItem
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
@@ -76,7 +78,7 @@ def cart_count(request):
     else:
         total_items = 0
 
-    return HttpResponse( total_items)
+    return HttpResponse(total_items)
 
 
 def add_to_cart(request, product_id):
@@ -132,3 +134,28 @@ def update_cart_item(request, cart_item_id, action):
     if action == 'decrease' and cart_item.quantity < 1:
         cart_item.delete()
     return redirect('view_cart')
+
+
+@login_required
+def checkout(request):
+
+    user = request.user
+    order = create_order(user)
+    if order:
+        messages.success(request, "Order placed successfully!")
+        return redirect("order_detail" , pk= order.id)
+    messages.error(request, "Failed to place order.")
+    return redirect("cart_view")
+
+
+@login_required
+def order_list(request):
+    orders = Order.objects.filter(user=request.user).order_by("-created_at")
+    return render(request, "store/orders/order_list.html", {"orders": orders})
+
+
+@login_required
+def order_detail(request, pk):
+    order = get_object_or_404(Order, id=pk)
+    context = {'order': order}
+    return render(request, "store/orders/order_detail.html", context)

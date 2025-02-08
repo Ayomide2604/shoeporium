@@ -29,9 +29,47 @@
 				>
 					Close
 				</button>
-				<a href="#" class="btn btn-primary w-100 w-md-auto"
-					>Proceed to Checkout</a
+				<button
+					type="button"
+					class="btn btn-primary w-100 w-md-auto"
+					data-bs-toggle="modal"
+					data-bs-target="#confirmCheckoutModal"
 				>
+					Proceed to Checkout
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div
+	class="modal fade"
+	id="confirmCheckoutModal"
+	tabindex="-1"
+	aria-labelledby="confirmCheckoutModalLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="confirmCheckoutModalLabel">
+					Confirm Checkout
+				</h5>
+				<button
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+					aria-label="Close"
+				></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to proceed with checkout?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+					Cancel
+				</button>
+				<a href="{% url 'checkout' %}" class="btn btn-primary">Yes, Checkout</a>
 			</div>
 		</div>
 	</div>
