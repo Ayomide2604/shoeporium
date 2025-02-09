@@ -111,4 +111,4 @@ class OrderItem(models.Model):
         return self.quantity * self.price
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.name} in Order {self.order.id}"
+        return f"{self.quantity} x {self.product.name} "
