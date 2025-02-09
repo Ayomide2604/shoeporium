@@ -20,7 +20,8 @@ urlpatterns = [
          views.update_cart_item, name='update_cart_item'),
 
     # Order
-    path("checkout/", views.checkout, name="checkout"),
     path("orders/", views.order_list, name="order_list"),
     path("order/<str:pk>", views.order_detail, name="order_detail"),
+    path('add_order/', views.add_order , name= 'add_order'),
+    path("checkout/<str:pk>", views.checkout, name="checkout"),
 ]

@@ -1,63 +1,70 @@
-{% extends 'base.html' %}
-{% load static %}
-{% load humanize %}
+{% extends 'base.html' %} {% load static %} {% load humanize %} 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4 text-center">Order Details</h2>
+	<h2 class="mb-4 text-center">Order Details</h2>
 
-    <div class="card shadow">
-        <div class="card-body">
-            <h5 class="card-title">Order #{{ order.id }}</h5>
-            <p class="card-text">
-                <strong>Status:</strong> 
-                <span class="badge 
-                    {% if order.status == 'successful' %} bg-success 
-                    {% elif order.status == 'pending' %} bg-warning 
-                    {% else %} bg-danger {% endif %}">
-                    {{ order.status }}
-                </span>
-            </p>
-            <p><strong>Placed on:</strong> {{ order.created_at}}</p>
+	<div class="card shadow">
+		<div class="card-body">
+			<h5 class="card-title">Order #{{ order.id }}</h5>
+			<p class="card-text">
+				<strong>Status:</strong>
+				<span
+					class="badge {% if order.status == 'successful' %} bg-success {% elif order.status == 'pending' %} bg-warning {% else %} bg-danger {% endif %}"
+				>
+					{{ order.status }}
+				</span>
+			</p>
+			<p><strong>Placed on:</strong> {{ order.created_at}}</p>
 
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th></th>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in order.items.all %}
-                        <tr>
-                            <td><img src="{{ item.product.featured_image.url }}" alt="{{ item.product.name }}" 
-                                class="img-fluid rounded" style="width: 80px; height: 80px; object-fit: cover;"></td>
-                            <td>{{ item.product.name }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>${{ item.price | intcomma }}</td>
-                            <td>${{ item.subtotal | intcomma}}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                    <tfoot>
-                        <tr class="table-info">
-                            <td colspan="4" class="text-end fw-bold">Total Price:</td>
-                            <td class="fw-bold">${{ order.total_order | intcomma}}</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+			<div class="table-responsive">
+				<table class="table table-bordered table-hover">
+					<thead class="table-dark">
+						<tr>
+							<th></th>
+							<th>Product</th>
+							<th>Quantity</th>
+							<th>Price</th>
+							<th>Subtotal</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in order.items.all %}
+						<tr>
+							<td>
+								<img
+									src="{{ item.product.featured_image.url }}"
+									alt="{{ item.product.name }}"
+									class="img-fluid rounded"
+									style="width: 80px; height: 80px; object-fit: cover"
+								/>
+							</td>
+							<td>{{ item.product.name }}</td>
+							<td>{{ item.quantity }}</td>
+							<td>₦{{ item.price | intcomma }}</td>
+							<td>₦{{ item.subtotal | intcomma}}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+					<tfoot>
+						<tr class="table-info">
+							<td colspan="4" class="text-end fw-bold">Total Price:</td>
+							<td class="fw-bold">₦{{ order.total_order | intcomma}}</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
 
-            <div class="d-flex justify-content-between mt-3">
-                <a href="{% url 'order_list' %}" class="btn btn-secondary">Back to Orders</a>
-                {% if order.status == 'pending' %}
-                <a href="#" class="btn btn-danger">Make Payment</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+			<div class="d-flex justify-content-between mt-3">
+				<a href="{% url 'order_list' %}" class="btn btn-secondary"
+					>Back to Orders</a
+				>
+				{% if order.status == 'pending' %}
+				<a href="{% url 'checkout' order.id %}" class="btn btn-danger"
+					>Make Payment</a
+				>
+				{% endif %}
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock %}

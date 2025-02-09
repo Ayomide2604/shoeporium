@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Shoe, Brand, ShoeImage, Cart, CartItem
+from .models import Order, Shoe, Brand, ShoeImage, Cart, CartItem
 
 
 @admin.register(Brand)
@@ -28,4 +28,9 @@ class CartAdmin(admin.ModelAdmin):
 
 @admin.register(CartItem)
 class CartItemAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
     pass

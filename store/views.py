@@ -137,13 +137,13 @@ def update_cart_item(request, cart_item_id, action):
 
 
 @login_required
-def checkout(request):
+def add_order(request):
 
     user = request.user
     order = create_order(user)
     if order:
         messages.success(request, "Order placed successfully!")
-        return redirect("order_detail" , pk= order.id)
+        return redirect("order_detail", pk=order.id)
     messages.error(request, "Failed to place order.")
     return redirect("cart_view")
 
@@ -159,3 +159,10 @@ def order_detail(request, pk):
     order = get_object_or_404(Order, id=pk)
     context = {'order': order}
     return render(request, "store/orders/order_detail.html", context)
+
+
+@login_required
+def checkout(request, pk):
+    order = get_object_or_404(Order, id=pk)
+    context = {'order': order}
+    return render(request, "store/orders/checkout.html", context)

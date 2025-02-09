@@ -32,7 +32,7 @@
                             <td>{{ order.created_at | date}}</td>
                             
                             <td class="fw-bold">
-                                ${{ order.total_order | intcomma }}
+                                ₦{{ order.total_order | intcomma }}
                             </td>
                             <td>
                                 <a href="{% url 'order_detail' order.id %}" class="btn btn-primary btn-sm">
