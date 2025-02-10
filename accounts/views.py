@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.contrib import messages
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, ProfileForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -56,4 +56,36 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    return render(request, 'accounts/profile.html')
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES,
+                           instance=request.user.profile)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            # Update User model fields
+            request.user.first_name = form.cleaned_data['first_name']
+            request.user.last_name = form.cleaned_data['last_name']
+            request.user.save()
+            # Save all profile fields
+            profile.address = form.cleaned_data['address']
+            profile.country = form.cleaned_data['country']
+            profile.phone = form.cleaned_data['phone']
+            if 'profile_image' in request.FILES:
+                profile.profile_image = request.FILES['profile_image']
+            profile.save()
+
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('profile')
+        else:
+            messages.error(
+                request, 'Failed to update profile. Please check the errors below.')
+    else:
+        initial_data = {
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'address': request.user.profile.address,
+            'country': request.user.profile.country,
+            'phone': request.user.profile.phone,
+        }
+        form = ProfileForm(instance=request.user.profile, initial=initial_data)
+
+    return render(request, 'accounts/profile.html', {'form': form})

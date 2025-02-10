@@ -8,7 +8,3 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('', include('store.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-if not settings.DEBUG:
-    urlpatterns += [path('__debug__/', include('debug_toolbar.urls'))]

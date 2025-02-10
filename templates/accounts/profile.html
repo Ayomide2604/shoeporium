@@ -1,6 +1,4 @@
-{% extends 'base.html' %} 
-{% load static %}
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% load widget_tweaks %} {% block content %}
 <!-- Profile 1 - Bootstrap Brain Component -->
 <section class="bg-light py-3 py-md-5 py-xl-8">
 	<div class="container">
@@ -14,21 +12,26 @@
 							</div>
 							<div class="card-body">
 								<div class="text-center mb-3">
-									<img src="{{user.profile.profile_image.url}}" class="img-fluid
-									rounded-circle" alt="profile picture" />
+									<img
+										src="{{user.profile.profile_image.url}}"
+										class="img-fluid rounded-circle"
+										alt="profile picture"
+									/>
 								</div>
-								
-								
+
 								<ul class="list-group list-group-flush mb-4">
 									<li
-                                        hx-get="{% url 'order_list' %}"
-                                        hx-target="#site-wrap"
-                                        hx-push-url="true"
-                                        style="cursor: pointer;"
+										hx-get="{% url 'order_list' %}"
+										hx-target="#site-wrap"
+										hx-push-url="true"
+										style="cursor: pointer"
 										class="list-group-item d-flex justify-content-between align-items-center"
 									>
 										<h6 class="m-0">Orders:</h6>
-										<span>{% if user.orders  %}{{user.orders.count}}{% else %}0{% endif %}</span>
+										<span
+											>{% if user.orders %}{{user.orders.count}}{% else %}0
+											{% endif %}</span
+										>
 									</li>
 								</ul>
 							</div>
@@ -68,7 +71,7 @@
 									Profile
 								</button>
 							</li>
-							
+
 							<li class="nav-item" role="presentation">
 								<button
 									class="nav-link"
@@ -92,12 +95,11 @@
 								aria-labelledby="overview-tab"
 								tabindex="0"
 							>
-								
 								<div class="row g-0">
 									<div
 										class="col-5 col-md-3 bg-light border-bottom border-white border-3"
 									>
-										<div class="p-2 ">First Name</div>
+										<div class="p-2">First Name</div>
 									</div>
 									<div
 										class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3"
@@ -165,104 +167,54 @@
 								aria-labelledby="profile-tab"
 								tabindex="0"
 							>
-								<form action="#!" class="row gy-3 gy-xxl-4">
-									<div class="col-12">
-										<div class="row gy-2">
-											<label class="col-12 form-label m-0">Profile Image</label>
-											<div class="col-12">
-												<img
-													src={{user.profile.profile_image.url}}
-													class="img-fluid rounded-circle w-25"
-													alt="Luna John"
-												/>
-											</div>
-											<div class="col-12">
-												<a
-													href="#!"
-													
-												>
-													<span  class="icomoon icon-pencil"></span>
-												</a>
-												<a
-													href="#!"
-													
-												>
-													<span class="icomoon icon-remove"></span>
-												</a>
+								<form
+									method="post"
+									hx-post="{% url 'profile' %}"
+									hx-target="#site-wrap"
+									hx-swap="innerHTML"
+									hx-encoding="multipart/form-data"
+									enctype="multipart/form-data"
+								>
+									{% csrf_token %}
+									
+
+									<div class="row g-0">
+										
+										
+										{% for field in form %} 
+										{% if field.name != 'email' %}
+										<div
+											class="col-5 col-md-3 bg-light border-bottom border-white border-3"
+										>
+											<div class="p-2">{{ field.label }}</div>
+										</div>
+										<div
+											class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3"
+										>
+											<div class="p-2">
+												{% render_field field class="form-control" %} {% if field.errors %}
+												<div class="invalid-feedback d-block">
+													{% for error in field.errors %}
+													<p>{{ error }}</p>
+													{% endfor %}
+												</div>
+												{% endif %}
 											</div>
 										</div>
+										{% endif %} 
+										{% endfor %}
+
+										
 									</div>
-									<div class="col-12 col-md-6">
-										<label for="inputFirstName" class="form-label"
-											>First Name</label
-										>
-										<input
-											type="text"
-											class="form-control"
-											id="inputFirstName"
-											value="{{user.profile.first_name}}"
-										/>
-									</div>
-									<div class="col-12 col-md-6">
-										<label for="inputLastName" class="form-label"
-											>Last Name</label
-										>
-										<input
-											type="text"
-											class="form-control"
-											id="inputLastName"
-											value="{{user.profile.last_name}}"
-										/>
-									</div>
-									
-									
-									
-									<div class="col-12 col-md-6">
-										<label for="inputPhone" class="form-label">Phone</label>
-										<input
-											type="tel"
-											class="form-control"
-											id="inputPhone"
-											value="{{user.profile.phone}}"
-										/>
-									</div>
-									<div class="col-12 col-md-6">
-										<label for="inputEmail" class="form-label">Email</label>
-										<input
-											type="email"
-											class="form-control"
-											id="inputEmail"
-											value="{{user.email}}"
-										/>
-									</div>
-									<div class="col-12 col-md-6">
-										<label for="inputAddress" class="form-label">Address</label>
-										<input
-											type="text"
-											class="form-control"
-											id="inputAddress"
-											value="{{user.profile.address}}"
-										/>
-									</div>
-									<div class="col-12 col-md-6">
-										<label for="inputCountry" class="form-label">Country</label>
-										<input
-											type="text"
-											class="form-control"
-											id="inputCountry"
-											value="{{user.profile.country}}"
-										/>
-									</div>
-									
-									
-									<div class="col-12">
-										<button type="submit" class="btn btn-primary">
-											Save Changes
+
+									<div class="mt-3">
+										<button type="submit" class="btn btn-primary w-100">
+											Update Profile
 										</button>
 									</div>
 								</form>
 							</div>
-							
+
 							<div
 								class="tab-pane fade"
 								id="password-tab-pane"
