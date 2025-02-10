@@ -1,59 +1,94 @@
-{% extends 'base.html' %} 
-{% load static %}
-{% load humanize %}
+{% extends 'base.html' %} {% load static %} {% load humanize %} 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4 text-center">Your Orders</h2>
+	<h2 class="mb-4 text-center">Your Orders</h2>
 
-    {% if orders %}
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover text-center align-middle">
-                <thead class="table-secondary">
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Status</th>
-                        <th>Placed On</th>
-                        <th>Total Price</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order in orders %}
-                        <tr>
-                            <td>{{ order.id }}</td>
-                            <td>
-                                <span class="badge 
-                                    {% if order.status == 'successful' %} bg-success 
-                                    {% elif order.status == 'pending' %} bg-warning 
-                                    {% else %} bg-danger {% endif %}">
-                                    {{ order.status }}
-                                </span>
-                            </td>
-                            <td>{{ order.created_at | date}}</td>
-                            
-                            <td class="fw-bold">
-                                ₦{{ order.total_order | intcomma }}
-                            </td>
-                            <td>
-                                <a href="{% url 'order_detail' order.id %}" class="btn btn-primary btn-sm">
-                                    View Order
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% else %}
-        <div class="alert alert-warning text-center" role="alert">
-            You have no orders yet.
-        </div>
-    {% endif %}
+	{% if orders %}
+	<div class="table-responsive">
+		<table
+			class="table table-bordered table-hover text-center align-middle d-none d-md-table"
+		>
+			<thead class="table-secondary">
+				<tr>
+					<th>Order ID</th>
+					<th>Status</th>
+					<th>Placed On</th>
+					<th>Total Price</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for order in orders %}
+				<tr>
+					<td>{{ order.id }}</td>
+					<td>
+						<span
+							class="badge {% if order.status == 'successful' %} bg-success {% elif order.status == 'pending' %} bg-warning {% else %} bg-danger {% endif %}"
+						>
+							{{ order.status }}
+						</span>
+					</td>
+					<td>{{ order.created_at | date}}</td>
 
-    <div class="text-center my-5">
-        <a hx-get="{% url 'products' %}" hx-push-url="true" hx-target="#site-wrap" class="btn btn-secondary ">
-            Continue Shopping
-        </a>
-    </div>
+					<td class="fw-bold">₦{{ order.total_order | intcomma }}</td>
+					<td>
+						<a
+							href="{% url 'order_detail' order.id %}"
+							class="btn btn-primary btn-sm"
+						>
+							View Order
+						</a>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+	<!-- Mobile view -->
+	<div class="d-md-none">
+		{% for order in orders %}
+		<div class="card mb-3 shadow-sm">
+			<div class="card-body">
+				<div class="d-flex justify-content-between align-items-center mb-2">
+					<h6 class="card-subtitle">Order #{{ order.id }}</h6>
+					<span
+						class="badge {% if order.status == 'successful' %} bg-success {% elif order.status == 'pending' %} bg-warning {% else %} bg-danger {% endif %}"
+					>
+						{{ order.status }}
+					</span>
+				</div>
+				<p class="card-text mb-1">
+					<small>Placed on: {{ order.created_at | date}}</small>
+				</p>
+				<p class="card-text fw-bold mb-3">
+					₦{{ order.total_order | intcomma }}
+				</p>
+				<a
+					href="{% url 'order_detail' order.id %}"
+					class="btn btn-primary btn-sm w-100"
+				>
+					View Order
+				</a>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	{% else %}
+	<div class="alert alert-warning text-center" role="alert">
+		You have no orders yet.
+	</div>
+	{% endif %}
+
+	<div class="text-center my-5">
+		<a
+			hx-get="{% url 'products' %}"
+			hx-push-url="true"
+			hx-target="#site-wrap"
+			class="btn btn-secondary"
+		>
+			Continue Shopping
+		</a>
+	</div>
 </div>
 {% endblock %}
