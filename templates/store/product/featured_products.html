@@ -1,47 +1,33 @@
-{% load static %}
+{% load static %} {% load humanize %}
 <div class="site-section block-3 site-blocks-2">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-7 site-section-heading text-center pt-4">
-                <h2>Featured Products</h2>
-            </div>
-        </div>
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-7 site-section-heading text-center pt-4">
+				<h2>Featured Products</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 block-3">
+				<div class="nonloop-block-3 owl-carousel">
+					{% if featured_products %}
+                    
+                    {% for product in featured_products %}
+                    <div class="item">
+						<div class="item-entry">
+							<a href="{% url 'product' product.id %}" class="product-item md-height bg-gray d-block">
+								<img src="{{product.featured_image.url}}" alt="Image" class="img-fluid" />
+							</a>
+							<h2 class="item-title"><a href="#">{{product.name}}</a></h2>
+							<strong class="item-price"> ₦{{product.price | intcomma}}</strong>
 
-        <div class="row">
-            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                <div class="item-entry">
-                    <a href="#" class="product-item d-block">
-                        <img src="{% static 'images/model_1.png' %}" class="img-fluid">
-                    </a>
-                    <h2 class="item-title"><a href="#">Smooth Cloth</a></h2>
-                    <strong class="item-price"><del>$46.00</del> $28.00</strong>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                <div class="item-entry">
-                    <a href="#" class="product-item d-block">
-                        <img src="{% static 'images/prod_3.png' %}" class="img-fluid">
-                    </a>
-                    <h2 class="item-title"><a href="#">Blue Shoe High Heels</a></h2>
-                    <strong class="item-price"><del>$46.00</del> $28.00</strong>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                <div class="item-entry">
-                    <a href="#" class="product-item d-block">
-                        <img src="{% static 'images/model_5.png' %}" class="img-fluid">
-                    </a>
-                    <h2 class="item-title"><a href="#">Denim Jacket</a></h2>
-                    <strong class="item-price"><del>$46.00</del> $28.00</strong>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                <div class="item-entry">
-                    <a href="#" class="product-item d-block">
-                        <img src="{% static 'images/prod_1.png' %}" class="img-fluid">
-                    </a>
-                    <h2 class="item-title"><a href="#">Leather Green Bag</a></h2>
-                    <strong class="item-price"><del>$46.00</del> $
+							
+						</div>
+					</div>
+                    {% endfor %}
+                        
+                    {% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

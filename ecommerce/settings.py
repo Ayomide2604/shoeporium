@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # Third Party Apps
     "django.contrib.humanize",
     'widget_tweaks',
+    # "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
+
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -175,3 +178,10 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Optional: Define URL for media files in production (if using Cloudinary)
 MEDIA_URL = "https://res.cloudinary.com/dfhvvgzf2/image/upload/"
+
+
+# INTERNAL_IPS = [
+#     # ...
+#     "127.0.0.1",
+#     # ...
+# ]

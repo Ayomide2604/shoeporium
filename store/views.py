@@ -56,7 +56,7 @@ def product_list(request):
         'shoes': page_obj,
         'selected_brand': brand_id,
         'sort_by': sort_by,
-        'brands': Brand.objects.all(),
+        'brands': Brand.objects.prefetch_related('shoes'),
     }
 
     return render(request, 'store/products/products.html', context)
@@ -64,7 +64,8 @@ def product_list(request):
 
 def product_detail(request, pk):
     shoe = get_object_or_404(Shoe, id=pk)
-    context = {'shoe': shoe}
+    featured_products = Shoe.objects.filter(brand_id=pk)[:3]
+    context = {'shoe': shoe, "featured_products": featured_products}
     return render(request, 'store/product/product.html', context)
 
 
