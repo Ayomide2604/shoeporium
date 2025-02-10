@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.contrib import messages
 from .forms import CustomUserCreationForm
+from django.contrib.auth.decorators import login_required
 
 
 def login_view(request):
@@ -33,7 +34,7 @@ def register(request):
             messages.success(
                 request, 'Registration successful! You can now log in.')
             if request.headers.get('HX-Request'):
-                return redirect('login')  
+                return redirect('login')
             return redirect('login')
         else:
             messages.error(
@@ -51,3 +52,8 @@ def logout_view(request):
         response = HttpResponse(status=204)
         response['HX-Redirect'] = '/'
         return response
+
+
+@login_required
+def profile_view(request):
+    return render(request, 'accounts/profile.html')

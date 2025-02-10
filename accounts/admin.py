@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import CustomUser, Profile
 from django.utils.html import format_html
 from django.urls import reverse
 # Register your models here.
@@ -24,3 +24,10 @@ class CustomUserAdmin(UserAdmin):
         return format_html('<a href="{}">View Cart</a>', url)
 
     view_cart_link.short_description = "Cart"
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ['user', 'country', 'phone']
+    search_fields = ['user__username', 'user__email', 'phone']
+    list_filter = ['country']
