@@ -21,8 +21,8 @@ class Profile(models.Model):
     address = models.CharField(max_length=200, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
-    bio = models.TextField(blank=True, null=True)
-    profile_image = CloudinaryField('image', blank=True, null=True)
+    profile_image = CloudinaryField(
+        'image', default="https://res.cloudinary.com/dfhvvgzf2/image/upload/v1739183725/profile_xhxjdh.png")
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
