@@ -65,7 +65,8 @@
 					₦{{ order.total_order | intcomma }}
 				</p>
 				<a
-					href="{% url 'order_detail' order.id %}"
+					hx-get="{% url 'order_detail' order.id %}"
+                    hx-push-url="true" hx-target="#site-wrap" style="cursor: pointer;"
 					class="btn btn-primary btn-sm w-100"
 				>
 					View Order

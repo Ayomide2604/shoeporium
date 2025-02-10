@@ -80,7 +80,7 @@
 						class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
 						id="cart-count"
 						hx-get="{% url 'cart_count' %}"
-						hx-trigger="every 5s"
+						hx-trigger="every 1s"
 					>
 					</span>
 				</a>
@@ -98,8 +98,19 @@
 						(Welcome, {{ user.username | title }})
 					</a>
 					<ul class="dropdown-menu" aria-labelledby="userDropdown">
-						<li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-						<li><a class="dropdown-item"  hx-get="{% url 'order_list' %}" hx-target="#site-wrap" hx-push-url="true" style="cursor: pointer;">My Orders</a></li>
+						<li>
+							<a class="dropdown-item" hx-get="{% url 'profile' %}"hx-push-url="true" hx-target="#site-wrap" style="cursor: pointer;">Profile</a>
+						</li>
+						<li>
+							<a
+								class="dropdown-item"
+								hx-get="{% url 'order_list' %}"
+								hx-target="#site-wrap"
+								hx-push-url="true"
+								style="cursor: pointer"
+								>My Orders</a
+							>
+						</li>
 						<li>
 							<a
 								class="dropdown-item"

@@ -93,11 +93,11 @@
 			</div>
 
 			<div class="d-flex justify-content-between mt-3">
-				<a href="{% url 'order_list' %}" class="btn btn-secondary"
+				<a hx-get="{% url 'order_list' %}" hx-push-url="true" hx-target="#site-wrap" style="cursor: pointer;" class="btn btn-secondary"
 					>Back to Orders</a
 				>
 				{% if order.status == 'pending' %}
-				<a href="{% url 'checkout' order.id %}" class="btn btn-danger"
+				<a hx-get="{% url 'checkout' order.id %}" hx-push-url="true" hx-target="#site-wrap" style="cursor: pointer;" class="btn btn-danger"
 					>Make Payment</a
 				>
 				{% endif %}
