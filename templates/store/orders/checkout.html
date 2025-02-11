@@ -4,11 +4,9 @@
 
 <div class="site-section">
 	<div class="container">
-		<div class="row mb-5">
-			
-		</div>
 		<div class="row">
-			<div class="col-md-6 mb-5 mb-md-0">
+			<!-- Billing Details Column -->
+			<div class="col-lg-6 col-md-12 mb-5">
 				<h2 class="h3 mb-3 text-black">Billing Details</h2>
 				<div class="p-3 p-lg-5 border">
 					<div class="form-group row">
@@ -313,15 +311,16 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-6">
+
+			<!-- Order Summary Column -->
+			<div class="col-lg-6 col-md-12">
+				<!-- Coupon Code Section -->
 				<div class="row mb-5">
-					<div class="col-md-12">
+					<div class="col-12">
 						<h2 class="h3 mb-3 text-black">Coupon Code</h2>
 						<div class="p-3 p-lg-5 border">
-							<label for="c_code" class="text-black mb-3"
-								>Enter your coupon code if you have one</label
-							>
-							<div class="input-group w-75">
+							<label for="c_code" class="text-black mb-3">Enter your coupon code if you have one</label>
+							<div class="input-group w-100">
 								<input
 									type="text"
 									class="form-control"
@@ -344,8 +343,9 @@
 					</div>
 				</div>
 
+				<!-- Order Summary Section -->
 				<div class="row mb-5">
-					<div class="col-md-12">
+					<div class="col-12">
 						<h2 class="h3 mb-3 text-black">Your Order</h2>
 						<div class="p-3 p-lg-5 border">
 							<table class="table site-block-order-table mb-5">
@@ -393,7 +393,7 @@
 										<p class="mb-0">
 											Make your payment directly into our bank account. Please
 											use your Order ID as the payment reference. Your order
-											won’t be shipped until the funds have cleared in our
+											won't be shipped until the funds have cleared in our
 											account.
 										</p>
 									</div>
@@ -418,52 +418,117 @@
 										<p class="mb-0">
 											Make your payment directly into our bank account. Please
 											use your Order ID as the payment reference. Your order
-											won’t be shipped until the funds have cleared in our
+											won't be shipped until the funds have cleared in our
 											account.
 										</p>
 									</div>
 								</div>
 							</div>
 
-							<div class="border p-3 mb-5">
-								<h3 class="h6 mb-0">
-									<a
-										class="d-block"
-										data-toggle="collapse"
-										href="#collapsepaypal"
-										role="button"
-										aria-expanded="false"
-										aria-controls="collapsepaypal"
-										>Paypal</a
-									>
-								</h3>
-
-								<div class="collapse" id="collapsepaypal">
-									<div class="py-2">
-										<p class="mb-0">
-											Make your payment directly into our bank account. Please
-											use your Order ID as the payment reference. Your order
-											won’t be shipped until the funds have cleared in our
-											account.
-										</p>
-									</div>
+							<div class="border p-3 mb-3">
+								<h3 class="h6 mb-0"><a class="d-block" data-toggle="collapse" href="#collapsepaystack" role="button" aria-expanded="true" aria-controls="collapsepaystack">Pay with Paystack</a></h3>
+							  
+								<div class="collapse show" id="collapsepaystack">
+								  <div class="py-2">
+									<p class="mb-0">Make your payment securely using Paystack. Your order will be processed once payment is confirmed.</p>
+								  </div>
 								</div>
-							</div>
-
-							<div class="form-group">
-								<button
-									class="btn btn-primary btn-lg btn-block"
-									onclick="window.location='thankyou.html'"
-								>
-									Place Order
-								</button>
+							  </div>
+							  
+							  <div class="form-group">
+								<button class="btn btn-primary btn-lg btn-block" id="paystack-button">Pay with Paystack</button>
+							  </div>
+							  
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- </form> -->
 	</div>
 </div>
+
+<!-- Add these CSS rules in a <style> tag in the head or in your CSS file -->
+<style>
+  @media (max-width: 768px) {
+    .form-group.row {
+      margin-bottom: 1rem;
+    }
+    
+    .input-group {
+      flex-wrap: nowrap;
+    }
+    
+    .table.site-block-order-table {
+      font-size: 0.9rem;
+    }
+    
+    .btn-lg {
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+    }
+    
+    .p-lg-5 {
+      padding: 1.5rem !important;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .form-group.row [class*="col-"] {
+      margin-bottom: 1rem;
+    }
+    
+    .input-group {
+      flex-direction: column;
+    }
+    
+    .input-group input,
+    .input-group .input-group-append {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    
+    .input-group .btn {
+      border-radius: 0.25rem !important;
+      margin-top: 0.5rem;
+    }
+  }
+</style>
+
+<!-- Add this just before the closing </body> tag -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+  const paymentForm = document.getElementById('paystack-button');
+  paymentForm.addEventListener("click", payWithPaystack, false);
+
+  function payWithPaystack() {
+	const email = document.getElementById("c_email_address").value;
+	
+	if (!email) {
+	  alert("Please enter your email address");
+	  return;
+	}
+
+	const payButton = document.getElementById('paystack-button');
+	payButton.disabled = true;
+	payButton.textContent = 'Processing...';
+
+	let handler = PaystackPop.setup({
+	  key: '{{ paystack_public_key }}',
+	  email: email,
+	  amount: {{ order.total_order }} * 100,
+	  currency: 'NGN',
+	  ref: '{{ payment_reference }}',
+	  callback: function(response) {
+		// Redirect to verification URL which will then redirect to order detail
+		window.location.href = `/payment/verify/${response.reference}/`;
+	  },
+	  onClose: function() {
+		payButton.disabled = false;
+		payButton.textContent = 'Pay Now';
+	  }
+	});
+	handler.openIframe();
+  }
+</script>
 {% endblock %}

@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.conf import settings
 
 from store.utils import create_order
 from .models import Brand, Order, Shoe, Cart, CartItem
@@ -7,6 +8,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.cache import cache_page
+from .payment import PaystackPayment
 
 
 # Create your views here.
@@ -163,7 +165,64 @@ def order_detail(request, pk):
 
 
 @login_required
-def checkout(request, pk):
-    order = get_object_or_404(Order, id=pk)
-    context = {'order': order}
-    return render(request, "store/orders/checkout.html", context)
+def checkout_view(request, order_id):
+    try:
+        order = Order.objects.get(id=order_id, user=request.user)
+        # Generate new payment reference for each checkout attempt
+        payment_reference = order.generate_payment_reference()
+
+        context = {
+            'order': order,
+            'paystack_public_key': settings.PAYSTACK_PUBLIC_KEY,
+            'payment_reference': payment_reference
+        }
+        return render(request, 'store/orders/checkout.html', context)
+    except Order.DoesNotExist:
+        messages.error(request, 'Order not found')
+        return redirect('orders')
+
+
+@login_required
+def initialize_payment(request, order_id):
+    try:
+        order = Order.objects.get(id=order_id, user=request.user)
+        payment = PaystackPayment.initialize_payment(order)
+
+        if payment['status']:
+            order.save_payment_reference(payment['reference'])
+            return redirect(payment['payment_url'])
+
+        return JsonResponse({
+            'status': False,
+            'message': payment['message']
+        })
+    except Order.DoesNotExist:
+        return JsonResponse({
+            'status': False,
+            'message': 'Order not found'
+        })
+
+
+@login_required
+def verify_payment(request, reference):
+    try:
+        order = Order.objects.get(payment_reference=reference)
+        payment = PaystackPayment.verify_payment(reference)
+
+        if payment['status']:
+            if payment['payment_status'] == 'success':
+                order.verify_payment()
+                messages.success(request, 'Payment successful!')
+                return redirect('order_detail', pk=order.id)
+            else:
+                order.status = 'failed'
+                order.save()
+                messages.error(request, 'Payment failed!')
+                return redirect('checkout', order_id=order.id)
+
+        messages.error(request, payment['message'])
+        return redirect('checkout', order_id=order.id)
+
+    except Order.DoesNotExist:
+        messages.error(request, 'Order not found')
+        return redirect('checkout')

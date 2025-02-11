@@ -91,9 +91,24 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default='pending')
+    payment_reference = models.CharField(max_length=200, blank=True, null=True)
+    email = models.EmailField(max_length=200, null=True, blank=True)
+    verified = models.BooleanField(default=False)
 
     def total_order(self):
         return sum(item.subtotal() for item in self.items.all())
+
+    def generate_payment_reference(self):
+        """Generate a new unique payment reference"""
+        reference = f"PAY-{uuid.uuid4().hex[:12].upper()}"
+        self.payment_reference = reference
+        self.save()
+        return reference
+
+    def verify_payment(self):
+        self.verified = True
+        self.status = 'successful'
+        self.save()
 
     def __str__(self):
         return f"Order {self.id} - {self.user.username}"
